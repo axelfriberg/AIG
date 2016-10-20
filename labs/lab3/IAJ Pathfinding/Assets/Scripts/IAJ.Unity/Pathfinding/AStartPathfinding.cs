@@ -76,7 +76,35 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
         {
             //this is where you process a child node 
             var childNode = GenerateChildNodeRecord(bestNode, connectionEdge);
-            //implement the rest of the code here
+            
+			//Get the cost estimate for the end node
+			NavigationGraphNode endNode = connectionEdge.ToNode;
+			float endNodeCost = bestNode.gValue + connectionEdge.Cost;
+
+			//If the node is closed we may have to skip, or remove it from the close list.
+			if (Closed.contains (endNode)) {
+				NodeRecord endNodeRecord = Closed.find (endNode); //should find this in the closed list
+				if (endNodeRecord.gValue <= endNodeCost)
+					continue;
+
+				Closed.Remove (endNodeRecord);
+				float endNodeHeuristic = endNodeRecord.fValue - endNodeRecord.gValue;
+			} else if (Open.contains (endNode)) {
+				NodeRecord endNodeRecord = Open.find (endNode);
+				if (endNodeRecord.gValue <= endNodeCost)
+					continue;
+
+				float endNodeHeuristic = endNodeRecord.fValue - endNodeRecord.gValue;
+			} else {
+				NodeRecord endNodeRecord = new NodeRecord ();
+				endNodeRecord.node = endNode;
+				var endNodeHeuristic = this.Heuristic.H(endNode, GoalNode);
+				endNodeRecord.gValue = endNodeCost;
+				endNodeRecord.parent = bestNode;
+				endNodeRecord.fValue = endNodeCost + endNodeHeuristic;
+				if (!Open.contains (endNode))
+					Open.Add (endNodeRecord);
+			}
         }
 
 
@@ -93,8 +121,43 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding
             //{
                 //this.ProcessChildNode(bestNode, bestNode.node.EdgeOut(i));
 
-            solution = null;
-			return true;
+			//Iterate through processing each node
+			NodeRecord current;
+			while (Open.Count () > 0)
+            {
+				//Find the smallest element in the open list, using the estimatedTotalCost()
+				current = Open.GetBestAndRemove();
+
+				//If the current node is the goal, terminate
+				if (current.Equals (GoalNode))
+					break;
+
+				//Otherwise get the outgoing connections
+				var outConnections = current.node.OutEdgeCount;
+				for (int i = 0; i < outConnections; i++) {
+					this.ProcessChildNode (current, current.node.EdgeOut (i));
+				}
+
+				Open.Remove (current);
+				Closed.Add (current);
+
+            }
+			if (current.node != GoalNode) {
+				solution = null;
+				return true;
+			} else {
+				Path path = new Path ();
+				var nodes = path.PathNodes;
+				var positions = path.PathPositions;
+				while (current.node != StartNode) {
+					nodes += current.parent;
+					current = current.parent.node;
+				}
+				nodes.Reverse();
+				positions.Reverse ();
+				solution = path;
+				return true;
+			}
 		}                 
 
         private NavigationGraphNode Quantize(Vector3 position)
