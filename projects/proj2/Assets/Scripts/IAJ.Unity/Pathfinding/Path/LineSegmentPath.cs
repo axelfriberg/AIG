@@ -24,13 +24,15 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
         }
 
         public override bool PathEnd(float param) {
-
-            throw new System.NotImplementedException();
+            if (param <= 0.99f) {
+                return false;
+            } else
+                return true;
         }
 
         public override float GetParam(Vector3 position, float lastParam) {
 
-            return Assets.Scripts.IAJ.Unity.Utils.MathHelper.closestParamInLineSegmentToPoint(StartPosition, EndPosition, position);
+            return MathHelper.closestParamInLineSegmentToPoint(StartPosition, EndPosition, position);
         }
     }
 }

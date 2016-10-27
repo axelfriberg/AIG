@@ -60,17 +60,26 @@ public class IAJMenuItems  {
         GlobalPath solution = null;
         float cost;
         Gateway startGate;
-        Gateway endGate;
+            Gateway endGate;
 
-        var pathfindingAlgorithm = new NodeArrayAStarPathFinding(navMesh, new EuclideanHeuristic());
+            var pathfindingAlgorithm = new NodeArrayAStarPathFinding(navMesh, new EuclideanHeuristic());
 
         //TODO implement the rest of the algorithm here, i.e. build the GatewayDistanceTable
-        GatewayDistanceTableRow row = new GatewayDistanceTableRow();
 
+        clusterGraph.gatewayDistanceTable = new GatewayDistanceTableRow[clusterGraph.gateways.Count];
+        
         for (int i = 0; i < clusterGraph.gateways.Count; i++) {
-            for (int j = i+1; j < clusterGraph.gateways.Count; j++) {
-                row[i] = (clusterGraph.gateways[i].center - clusterGraph.gateways[j].center).magnitude;
+            GatewayDistanceTableRow row = ScriptableObject.CreateInstance<GatewayDistanceTableRow>();
+            row.entries = new GatewayDistanceTableEntry[clusterGraph.gateways.Count];
+            for (int j = 0; j < clusterGraph.gateways.Count; j++) {
+                GatewayDistanceTableEntry entry = ScriptableObject.CreateInstance<GatewayDistanceTableEntry>();
+               
+                entry.startGatewayPosition = clusterGraph.gateways[i].center;
+                entry.endGatewayPosition = clusterGraph.gateways[j].center;
+                entry.shortestDistance = (clusterGraph.gateways[i].center - clusterGraph.gateways[j].center).magnitude;
+                row.entries[j] = entry;
             }
+            clusterGraph.gatewayDistanceTable[i] = row;
         }
 
         //create a new asset that will contain the ClusterGraph and save it to disk (DO NOT REMOVE THIS LINE)

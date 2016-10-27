@@ -15,9 +15,20 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Heuristics
 
         public float H(NavigationGraphNode node, NavigationGraphNode goalNode)
         {
-            //for now just returns the euclidean distance
-            return EuclideanDistance(node.LocalPosition, goalNode.LocalPosition);
-            //TODO implement this properly
+            Cluster clusterStart = this.ClusterGraph.Quantize(node);
+            Cluster clusterEnd = this.ClusterGraph.Quantize(goalNode);
+            if (clusterStart.center == clusterEnd.center) {
+                return EuclideanDistance(node.LocalPosition, goalNode.LocalPosition);
+            } else {
+                foreach (Gateway startGateway  in clusterStart.gateways) {
+                    float startDistance = EuclideanDistance(node.LocalPosition, startGateway.center);
+                    foreach (Gateway endGateway in clusterEnd.gateways) {
+                        float endDistance = EuclideanDistance(node.LocalPosition, endGateway.center);
+                        //ClusterGraph.gatewayDistanceTable
+                    }
+                }
+            }
+            
         }
 
         public float EuclideanDistance(Vector3 startPosition, Vector3 endPosition)
