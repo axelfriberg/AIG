@@ -7,6 +7,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures {
         private NodeRecord[] NodeRecords { get; set; }
         private List<NodeRecord> SpecialCaseNodes { get; set; }
         private NodePriorityHeap Open { get; set; }
+        private NodePriorityHeap Closed { get; set; }
+
 
         public NodeRecordArray(List<NavigationGraphNode> nodes) {
             //this method creates and initializes the NodeRecordArray for all nodes in the Navigation Graph
@@ -21,6 +23,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures {
             this.SpecialCaseNodes = new List<NodeRecord>();
 
             this.Open = new NodePriorityHeap();
+            this.Closed = new NodePriorityHeap();
         }
 
         public NodeRecord GetNodeRecord(NavigationGraphNode node) {
@@ -53,8 +56,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures {
         }
 
         void IClosedSet.Initialize() {
-            //TODO implement
-            throw new NotImplementedException();
+            this.Closed.Initialize();
         }
 
         public void AddToOpen(NodeRecord nodeRecord) {
