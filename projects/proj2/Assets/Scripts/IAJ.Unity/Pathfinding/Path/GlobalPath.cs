@@ -30,18 +30,30 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
         }
 
         public override float GetParam(Vector3 position, float previousParam) {
-            //TODO implement
-            throw new System.NotImplementedException();
+            return MathHelper.closestParamInLineSegmentToPoint(PathNodes[0].Position, PathNodes[PathNodes.Count-1].Position, position);
+
         }
 
         public override Vector3 GetPosition(float param) {
-            //TODO implement
-            throw new System.NotImplementedException();
+            Vector3 VectorAux, Dist;
+            Vector3 EndPosition = PathPositions[PathPositions.Count - 1];
+            Vector3 StartPosition = PathPositions[0];
+            Dist.x = EndPosition.x - StartPosition.x;
+            Dist.z = EndPosition.z - StartPosition.z;
+
+            VectorAux.x = StartPosition.x + Dist.x * param;
+            VectorAux.y = StartPosition.y;
+            VectorAux.z = StartPosition.z + Dist.z * param;
+
+            return VectorAux;
         }
 
         public override bool PathEnd(float param) {
-            //TODO implement
-            throw new System.NotImplementedException();
+            float paramMax = LocalPaths.Count;
+            if (param <= paramMax-0.01) {
+                return false;
+            } else
+                return true;
         }
     }
 }
