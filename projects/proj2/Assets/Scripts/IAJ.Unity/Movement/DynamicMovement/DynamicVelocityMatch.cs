@@ -11,7 +11,7 @@
         public KinematicData MovingTarget { get; set; }
 
         public DynamicVelocityMatch() {
-            TimeToTargetSpeed = 0.5f;
+            //TimeToTargetSpeed = 0.5f;
         }
         public override MovementOutput GetMovement() {
             var output = new MovementOutput();

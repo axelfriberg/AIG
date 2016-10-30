@@ -66,7 +66,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
 
         public override bool PathEnd(float param) {
             //return param > LocalPaths.Count - MathConstants.EPSILON;
-            return param > LocalPaths.Count - 0.1;
+            return param > LocalPaths.Count - 0.05;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
         }
 
         public override bool PathEnd(float param) {
-            return param > 0.90f;
+            return param > 0.95f;
         }
 
         public override float GetParam(Vector3 position, float lastParam) {
