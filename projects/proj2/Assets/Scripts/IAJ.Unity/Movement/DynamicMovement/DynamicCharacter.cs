@@ -33,6 +33,7 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement
         {
             if (this.Movement != null) 
             {
+                //Debug.Log(1);
                 MovementOutput steering = this.Movement.GetMovement();
 
                 this.KinematicData.Integrate(steering,this.Drag,Time.deltaTime);

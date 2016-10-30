@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Assets.Scripts.IAJ.Unity.Utils;
 
 namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures.HPStructures
 {
@@ -21,14 +22,14 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures.HPStructures
         public Cluster Quantize(NavigationGraphNode node)
         {
 
-            foreach (Cluster c in clusters) {
-                if (node.Position.x <= c.max.x && node.Position.x >= c.min.x) {
-                    if (node.Position.z <= c.max.z && node.Position.z >= c.min.z) {
-                        return c;
-                    }
-                }
-            }
-            return null;
+             foreach (Cluster c in clusters) {
+                 if (node.Position.x <= c.max.x && node.Position.x >= c.min.x) {
+                     if (node.Position.z <= c.max.z && node.Position.z >= c.min.z) {
+                         return c;
+                     }
+                 }
+             }
+             return null; 
         }
 
         public void SaveToAssetDatabase()

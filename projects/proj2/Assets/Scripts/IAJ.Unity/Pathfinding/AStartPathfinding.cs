@@ -137,7 +137,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding {
                     TotalProcessedNodes = (uint)NodesProcessed;
                     MaxOpenNodes = MaxOpenSize;
                     TotalProcessingTime = Time.realtimeSinceStartup - StartTime;
-                    Debug.Log(TotalProcessingTime);
+                    //Debug.Log(TotalProcessingTime);
                     solution = CalculateSolution(CurrentNode, false);
                     return true;
                 }

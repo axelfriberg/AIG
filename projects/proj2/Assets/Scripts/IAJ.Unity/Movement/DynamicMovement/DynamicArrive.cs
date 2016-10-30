@@ -1,49 +1,58 @@
-﻿using Assets.Scripts.IAJ.Unity.Utils;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement {
-    public class DynamicArrive : DynamicVelocityMatch {
+    public class DynamicArrive : DynamicSeek {
+        public float MaxSpeed { get; set; }
 
+        public float TimeToTarget { get; set; }
 
-        public DynamicArrive() {
-            Arrived = false;
-        }
+        public float TargetRadius { get; set; }
+
+        public float SlowRadius { get; set; }
 
         public override string Name {
             get { return "Arrive"; }
         }
-        public float MaxSpeed { get; set; }
 
-        public float StopRadius { get; set; }
-        public float SlowRadius { get; set; }
+        public DynamicArrive() {
 
-        public bool Arrived { get; set; }
+        }
 
 
         public override MovementOutput GetMovement() {
-
-            Vector3 direction = Target.position - Character.position;
-            float distance = Vector3.Magnitude(direction);
             float targetSpeed;
+            MovementOutput output = new MovementOutput();
 
-            if (distance <= StopRadius) {
-                //Arrived = true;
-                var output = new MovementOutput();
+            var direction = this.Target.position - this.Character.position;
+            var distance = direction.magnitude;
+
+            if (distance < this.TargetRadius) {
+                Debug.Log(distance);
+                output.linear = Vector3.zero;
                 return output;
             }
 
-            if (distance > SlowRadius) {
-                targetSpeed = MaxSpeed;
+            if (distance > this.SlowRadius) {
+                //maximum speed
+                targetSpeed = this.MaxSpeed;
             } else {
-                Arrived = true;
-                targetSpeed = MaxSpeed * (distance / SlowRadius);
+                targetSpeed = this.MaxSpeed * (distance / this.SlowRadius);
             }
 
-            this.MovingTarget = new KinematicData();
-            this.MovingTarget.velocity = direction.normalized * targetSpeed;
+            direction.Normalize();
+            direction *= targetSpeed;
+
+            output.linear = direction - this.Character.velocity;
+            output.linear /= this.TimeToTarget;
 
 
-            return base.GetMovement();
+            // If that is too fast, then clip the acceleration
+            if (output.linear.sqrMagnitude > this.MaxAcceleration * this.MaxAcceleration) {
+                output.linear.Normalize();
+                output.linear *= this.MaxAcceleration;
+            }
+
+            return output;
         }
     }
 }

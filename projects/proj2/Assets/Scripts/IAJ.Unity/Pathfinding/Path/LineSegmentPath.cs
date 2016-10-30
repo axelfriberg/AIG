@@ -1,5 +1,6 @@
-﻿using Assets.Scripts.IAJ.Unity.Utils;
+﻿using System;
 using UnityEngine;
+using Assets.Scripts.IAJ.Unity.Utils;
 
 namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
     public class LineSegmentPath : LocalPath {
@@ -11,28 +12,17 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
         }
 
         public override Vector3 GetPosition(float param) {
-            Vector3 VectorAux, Dist;
+            return StartPosition + (this.LineVector * param);
 
-            Dist.x = EndPosition.x - StartPosition.x;
-            Dist.z = EndPosition.z - StartPosition.z;
-
-            VectorAux.x = StartPosition.x + Dist.x * param;
-            VectorAux.y = StartPosition.y;
-            VectorAux.z = StartPosition.z + Dist.z * param;
-
-            return VectorAux;
         }
 
         public override bool PathEnd(float param) {
-            if (param <= 0.99f) {
-                return false;
-            } else
-                return true;
+            return param > 0.90f;
         }
 
         public override float GetParam(Vector3 position, float lastParam) {
+            return MathHelper.closestParamInLineSegmentToPoint(this.StartPosition, this.EndPosition, position);
 
-            return MathHelper.closestParamInLineSegmentToPoint(StartPosition, EndPosition, position);
         }
     }
 }

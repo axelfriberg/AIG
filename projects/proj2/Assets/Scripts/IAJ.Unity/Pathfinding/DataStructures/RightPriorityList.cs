@@ -56,8 +56,7 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures {
         }
 
         public int Compare(NodeRecord x, NodeRecord y) {
-            //TODO implement
-            throw new NotImplementedException();
+            return y.CompareTo(x);
         }
     }
 }
