@@ -97,7 +97,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding {
             var NodesProcessed = 0;
             var MaxOpenSize = 0;
             float StartTime = Time.realtimeSinceStartup;
-            //Debug.Log(StartTime);
 
             while (true) {
 
@@ -117,7 +116,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding {
 
                 if (NodesPerSearch < CurrentSearchNodes) {
                     if (returnPartialSolution) {
-                        //Debug.Log("a");
                         solution = CalculateSolution(this.Open.PeekBest(), returnPartialSolution);
                     } else {
                         solution = null;
@@ -137,7 +135,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding {
                     TotalProcessedNodes = (uint)NodesProcessed;
                     MaxOpenNodes = MaxOpenSize;
                     TotalProcessingTime = Time.realtimeSinceStartup - StartTime;
-                    //Debug.Log(TotalProcessingTime);
                     solution = CalculateSolution(CurrentNode, false);
                     return true;
                 }

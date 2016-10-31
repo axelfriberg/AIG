@@ -25,7 +25,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
                 var sqrDistance = (this.PathPositions[i] - previousPosition).sqrMagnitude;
                 if (sqrDistance >= 2.0f) {
                     this.LocalPaths.Add(new LineSegmentPath(previousPosition, this.PathPositions[i]));
-                    //Debug.Log(this.PathPositions[i]);
                     previousPosition = this.PathPositions[i];
                 }
             }
@@ -39,18 +38,16 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
             }
 
             var localPath = this.LocalPaths[localPathIndex];
-            var localParam1 = localPath.GetParam(position, previousParam - localPathIndex);
-            //Debug.Log(position);
+            var localParam = localPath.GetParam(position, previousParam - localPathIndex);
             //if we are at the end of the current local path, try the next one
-            if (localPath.PathEnd(localParam1)) {
+            if (localPath.PathEnd(localParam)) {
                 if (localPathIndex < this.LocalPaths.Count - 1) {
                     localPathIndex++;
                     localPath = this.LocalPaths[localPathIndex];
-                    localParam1 = localPath.GetParam(position, 0.0f);
+                    localParam = localPath.GetParam(position, 0.0f);
                 }
             }
-            //Debug.Log(localPathIndex + localParam1);
-            return localPathIndex + localParam1;
+            return localPathIndex + localParam;
         }
 
         public override Vector3 GetPosition(float param) {
@@ -65,7 +62,6 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Path {
         }
 
         public override bool PathEnd(float param) {
-            //return param > LocalPaths.Count - MathConstants.EPSILON;
             return param > LocalPaths.Count - 0.05;
         }
     }

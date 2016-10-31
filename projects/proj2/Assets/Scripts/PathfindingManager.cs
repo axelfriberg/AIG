@@ -70,23 +70,14 @@ public class PathfindingManager : MonoBehaviour {
 	    if (this.AStarPathFinding.InProgress)
 	    {
 	        var finished = this.AStarPathFinding.Search(out this.currentSolution);
-            //Debug.Log(finished);
             if (finished && this.currentSolution != null)
 	        {
-                //Debug.Log(this.currentSolution != null);
                 //lets smooth out the Path
                 this.startPosition = this.character.KinematicData.position;
-                /*for (int i = 0; i < this.currentSolution.PathPositions.Count; i++) {
-                    Debug.Log(this.currentSolution.PathPositions[i]);
-                }*/
+
                 this.currentSmoothedSolution = StringPullingPathSmoothing.SmoothPath(this.character.KinematicData,this.currentSolution);
                 this.currentSmoothedSolution.CalculateLocalPathsFromPathPositions(this.character.KinematicData.position);
-                for (int i = 0; i < this.currentSmoothedSolution.PathPositions.Count; i++) {
-                    //Debug.Log(this.currentSmoothedSolution.PathPositions[i]);
-                }
                 this.character.Movement = new DynamicFollowPath(this.character.KinematicData, this.currentSmoothedSolution);
-                //Debug.Log(this.currentSmoothedSolution.LocalPaths);
-                //Debug.Log(1);
             }
 	    }
 
@@ -166,7 +157,6 @@ public class PathfindingManager : MonoBehaviour {
             //draw the target for the follow path movement
             if (this.character.Movement != null)
             {
-                //Debug.Log("character movement not null");
                 //Gizmos.DrawSphere(this.character.Movement.Target.position, 5.0f);
             }
         }
