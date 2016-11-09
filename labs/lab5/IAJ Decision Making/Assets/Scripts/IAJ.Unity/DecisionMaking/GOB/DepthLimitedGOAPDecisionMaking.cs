@@ -51,28 +51,44 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
             var startTime = Time.realtimeSinceStartup;
 
             //TODO: Implement
-            this.BestAction = this.Actions[0];
-            this.BestDiscontentmentValue = CalculateDiscontentment(this.Actions[0], this.Goals);
-
-            foreach(Action action in this.Actions)
+            float currentValue = float.MaxValue;
+            while(this.CurrentDepth >= 0)
             {
-                if (action.CanExecute())
+                if(CurrentDepth >= MAX_DEPTH)
                 {
-                    float value = CalculateDiscontentment(action, this.Goals);
-                    if(value < BestDiscontentmentValue)
+                    currentValue = Models[CurrentDepth].CalculateDiscontentment(this.Goals);
+                    if(currentValue < this.BestDiscontentmentValue)
                     {
-                        BestDiscontentmentValue = value;
-                        BestAction = action;
+                        this.BestDiscontentmentValue = currentValue;
+                        this.BestAction = this.Actions[0];
                     }
+                    CurrentDepth -= 1;
+                    continue;
+                }
+
+                Action nextAction = Models[CurrentDepth].GetNextAction();
+                if(nextAction != null)
+                {
+                    Models[CurrentDepth + 1] = Models[CurrentDepth].GenerateChildWorldModel();
+                    nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
+                    processedActions += 1;
+                    Actions[CurrentDepth] = nextAction;
+                    CurrentDepth += 1;
+                }
+                else
+                {
+                    CurrentDepth -= 1;  
                 }
             }
+           
+
 
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
             this.InProgress = false;
             return this.BestAction;
         }
 
-        private float CalculateDiscontentment(Action action, List<Goal> goals)
+        /*private float CalculateDiscontentment(Action action, List<Goal> goals)
         {
             float discontentment = 0;
 
@@ -83,5 +99,22 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
             }
             return discontentment;
         }
+
+
+        this.BestAction = this.Actions[0];
+        this.BestDiscontentmentValue = CalculateDiscontentment(this.Actions[0], this.Goals);
+
+        foreach(Action action in this.Actions)
+        {
+            if (action.CanExecute())
+            {
+                float value = CalculateDiscontentment(action, this.Goals);
+                if(value < BestDiscontentmentValue)
+                {
+                    BestDiscontentmentValue = value;
+                    BestAction = action;
+                }
+            }
+        }*/
     }
 }
