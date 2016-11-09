@@ -51,11 +51,37 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
             var startTime = Time.realtimeSinceStartup;
 
             //TODO: Implement
-            throw new NotImplementedException();
+            this.BestAction = this.Actions[0];
+            this.BestDiscontentmentValue = CalculateDiscontentment(this.Actions[0], this.Goals);
+
+            foreach(Action action in this.Actions)
+            {
+                if (action.CanExecute())
+                {
+                    float value = CalculateDiscontentment(action, this.Goals);
+                    if(value < BestDiscontentmentValue)
+                    {
+                        BestDiscontentmentValue = value;
+                        BestAction = action;
+                    }
+                }
+            }
 
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
             this.InProgress = false;
             return this.BestAction;
+        }
+
+        private float CalculateDiscontentment(Action action, List<Goal> goals)
+        {
+            float discontentment = 0;
+
+            foreach(Goal goal in goals)
+            {
+                float newValue = goal.InsistenceValue + action.GetGoalChange(goal);
+                discontentment += goal.GetDiscontentment(newValue);
+            }
+            return discontentment;
         }
     }
 }
