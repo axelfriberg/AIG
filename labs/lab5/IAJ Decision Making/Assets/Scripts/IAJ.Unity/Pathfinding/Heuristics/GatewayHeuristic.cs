@@ -16,8 +16,8 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.Heuristics {
             int j = 0;
             float finalDistance = float.MaxValue;
             float tempDistance = 0;
-            Cluster clusterStart = ScriptableObject.CreateInstance<Cluster>();
-            Cluster clusterEnd = ScriptableObject.CreateInstance<Cluster>();
+            Cluster clusterStart;
+            Cluster clusterEnd;
             clusterStart = this.ClusterGraph.Quantize(node);
             clusterEnd = this.ClusterGraph.Quantize(goalNode);
             if ((object.ReferenceEquals(null, clusterStart)) || (object.ReferenceEquals(null, clusterEnd))) {

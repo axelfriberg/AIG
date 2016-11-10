@@ -12,11 +12,11 @@ namespace Assets.Scripts.IAJ.Unity.Movement.DynamicMovement {
 
         public DynamicFollowPath(KinematicData character, Path path) {
 
-            this.MaxSpeed = 300.0f;
+            this.MaxSpeed = 600.0f;
             this.SlowRadius = 5.0f;
             this.TimeToTargetSpeed = 1.0f;
             this.StopRadius = 0.5f;
-            this.MaxAcceleration = 50.0f;
+            this.MaxAcceleration = 100.0f;
 
             this.Target = new KinematicData();
             this.Character = character;
