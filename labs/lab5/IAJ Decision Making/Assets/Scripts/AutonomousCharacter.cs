@@ -40,8 +40,8 @@ namespace Assets.Scripts
         public Goal GetRichGoal { get; private set; }
         public Goal GainXPGoal { get; private set; }
         public List<Goal> Goals { get; set; }
-        public List<Action> Actions { get; set; }
-        public Action CurrentAction { get; private set; }
+        public List<IAJ.Unity.DecisionMaking.GOB.Action> Actions { get; set; }
+        public IAJ.Unity.DecisionMaking.GOB.Action CurrentAction { get; private set; }
         public DynamicCharacter Character { get; private set; }
         public DepthLimitedGOAPDecisionMaking GOAPDecisionMaking { get; set; }
         public AStarPathfinding AStarPathFinding;
@@ -108,7 +108,7 @@ namespace Assets.Scripts
 
             //initialize the available actions
 
-            this.Actions = new List<Action>();
+            this.Actions = new List<IAJ.Unity.DecisionMaking.GOB.Action>();
 
             foreach (var chest in GameObject.FindGameObjectsWithTag("Chest"))
             {
