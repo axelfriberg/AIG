@@ -76,8 +76,7 @@ namespace Assets.Scripts
 
             var clusterGraph = Resources.Load<ClusterGraph>("ClusterGraph");
        
-            //this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
-            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new EuclideanHeuristic()));
+            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
 
             //initialization of the GOB decision making
             //let's start by creating 4 main goals
