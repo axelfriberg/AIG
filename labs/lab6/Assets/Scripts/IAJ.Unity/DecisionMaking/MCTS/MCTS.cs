@@ -75,9 +75,20 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             MCTSNode currentNode = initialNode;
             MCTSNode bestChild;
 
+            do
+            {
+                nextAction = this.CurrentStateWorldModel.GetNextAction();
+                if (nextAction != null)
+                {
+                    return Expand(currentNode, nextAction);
+                }else
+                {
+                    bestChild = BestUCTChild(currentNode);
+                    currentNode = bestChild;
+                }
+            } while (currentNode.ChildNodes.Count > 0);
 
-            //TODO: implement
-            throw new NotImplementedException();
+            return bestChild;
         }
 
         private Reward Playout(WorldModel initialPlayoutState)
