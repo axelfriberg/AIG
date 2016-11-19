@@ -65,8 +65,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             var startTime = Time.realtimeSinceStartup;
             this.CurrentIterationsInFrame = 0;
 
-            //TODO: implement
-            throw new NotImplementedException();
+            while (CurrentIterationsInFrame < MaxIterationsProcessedPerFrame)
+            {
+                selectedNode = Selection(this.InitialNode);
+                reward = Playout(selectedNode.State);
+                Backpropagate(selectedNode, reward);
+            }
+            return BestChild(InitialNode).Action;
         }
 
         private MCTSNode Selection(MCTSNode initialNode)
