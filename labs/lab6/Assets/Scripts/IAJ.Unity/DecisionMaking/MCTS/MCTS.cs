@@ -108,8 +108,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         private void Backpropagate(MCTSNode node, Reward reward)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            MCTSNode currentNode = node;
+            while(currentNode != null)
+            {
+                currentNode.N += 1;
+                currentNode.Q += currentNode.Parent.Q;
+                currentNode = currentNode.Parent;                  
+            }
         }
 
         private MCTSNode Expand(MCTSNode parent, GOB.Action action)
