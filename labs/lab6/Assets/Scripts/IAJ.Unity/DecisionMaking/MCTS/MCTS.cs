@@ -105,8 +105,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         private MCTSNode Expand(MCTSNode parent, GOB.Action action)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            action.ApplyActionEffects(CurrentStateWorldModel);
+            WorldModel newState = CurrentStateWorldModel;
+            MCTSNode newChild = new MCTSNode(newState);
+            newChild.Action = action;
+            return newChild;
         }
 
         //gets the best child of a node, using the UCT formula
