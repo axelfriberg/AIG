@@ -124,8 +124,25 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         //gets the best child of a node, using the UCT formula
         private MCTSNode BestUCTChild(MCTSNode node)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            List<MCTSNode> children = node.ChildNodes;
+            double bestUCT = -1;
+            int bestChildIndex = -1;
+            for(int i = 0; i < children.Count; i++)
+            {
+                MCTSNode child = children[i];
+                float mui = child.Q/child.N; //Do as multiplication with power of -1?
+                int ni = child.N;
+                int N = node.N;
+                double C = Math.Sqrt(2);
+                double UCT = mui + C * (Math.Sqrt(Math.Log(N)/ni));
+                if(UCT > bestUCT)
+                {
+                    bestUCT = UCT;
+                    bestChildIndex = i;
+                }
+            }
+
+            return children[bestChildIndex];
         }
 
         //this method is very similar to the bestUCTChild, but it is used to return the final action of the MCTS search, and so we do not care about
