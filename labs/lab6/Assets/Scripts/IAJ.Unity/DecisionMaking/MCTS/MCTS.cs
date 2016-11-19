@@ -149,8 +149,25 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         //the exploration factor
         private MCTSNode BestChild(MCTSNode node)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            List<MCTSNode> children = node.ChildNodes;
+            double bestUCT = -1;
+            int bestChildIndex = -1;
+            for (int i = 0; i < children.Count; i++)
+            {
+                MCTSNode child = children[i];
+                float mui = child.Q / child.N; //Do as multiplication with power of -1?
+                int ni = child.N;
+                int N = node.N;
+                double C = 1;
+                double UCT = mui + C * (Math.Sqrt(Math.Log(N) / ni));
+                if (UCT > bestUCT)
+                {
+                    bestUCT = UCT;
+                    bestChildIndex = i;
+                }
+            }
+
+            return children[bestChildIndex];
         }
     }
 }
