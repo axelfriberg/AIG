@@ -93,8 +93,17 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         private Reward Playout(WorldModel initialPlayoutState)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            WorldModel currentState = initialPlayoutState;
+            while (!currentState.IsTerminal())
+            {
+                GOB.Action[] actions = currentState.GetExecutableActions();
+                int index = RandomGenerator.Next(0, actions.Length);
+                GOB.Action action = actions[index];
+                action.ApplyActionEffects(currentState);
+            }
+            Reward reward = new Reward();
+            reward.Value = currentState.GetScore();
+            return reward;
         }
 
         private void Backpropagate(MCTSNode node, Reward reward)
