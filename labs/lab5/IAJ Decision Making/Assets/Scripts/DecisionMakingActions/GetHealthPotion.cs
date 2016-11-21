@@ -36,7 +36,7 @@ namespace Assets.Scripts.DecisionMakingActions
         public override void ApplyActionEffects(WorldModel worldModel)
         {
             base.ApplyActionEffects(worldModel);
-            worldModel.SetProperty(Properties.MANA, this.Character.GameManager.characterData.MaxHP);
+            worldModel.SetProperty(Properties.HP, this.Character.GameManager.characterData.MaxHP);
             //disables the target object so that it can't be reused again
             worldModel.SetProperty(this.Target.name, false);
         }
