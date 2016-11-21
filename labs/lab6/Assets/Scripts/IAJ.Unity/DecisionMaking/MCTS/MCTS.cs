@@ -65,11 +65,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             var startTime = Time.realtimeSinceStartup;
             this.CurrentIterationsInFrame = 0;
 
-            while (CurrentIterationsInFrame < MaxIterationsProcessedPerFrame)
+            while (this.CurrentIterationsInFrame < this.MaxIterationsProcessedPerFrame && 
+                this.CurrentIterations < this.MaxIterations)
             {
                 selectedNode = Selection(this.InitialNode);
                 reward = Playout(selectedNode.State);
                 Backpropagate(selectedNode, reward);
+                this.CurrentIterationsInFrame++;
             }
             return BestChild(InitialNode).Action;
         }
@@ -78,9 +80,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         {
             GOB.Action nextAction;
             MCTSNode currentNode = initialNode;
-            MCTSNode bestChild;
+            MCTSNode bestChild = null;
 
-            do
+            while (!CurrentStateWorldModel.IsTerminal())
             {
                 nextAction = this.CurrentStateWorldModel.GetNextAction();
                 if (nextAction != null)
@@ -91,7 +93,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                     bestChild = BestUCTChild(currentNode);
                     currentNode = bestChild;
                 }
-            } while (currentNode.ChildNodes.Count > 0);
+            }
 
             return bestChild;
         }
@@ -102,8 +104,11 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             while (!currentState.IsTerminal())
             {
                 GOB.Action[] actions = currentState.GetExecutableActions();
-                int index = RandomGenerator.Next(0, actions.Length);
+                if (actions.Length == 0)
+                    continue;
+                int index = this.RandomGenerator.Next(0, actions.Length);
                 GOB.Action action = actions[index];
+                currentState = currentState.GenerateChildWorldModel();
                 action.ApplyActionEffects(currentState);
             }
             Reward reward = new Reward();
@@ -117,7 +122,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             while(currentNode != null)
             {
                 currentNode.N += 1;
-                currentNode.Q += currentNode.Parent.Q;
+                currentNode.Q += reward.Value;
                 currentNode = currentNode.Parent;                  
             }
         }
@@ -151,7 +156,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                     bestChildIndex = i;
                 }
             }
-
+            
             return children[bestChildIndex];
         }
 
