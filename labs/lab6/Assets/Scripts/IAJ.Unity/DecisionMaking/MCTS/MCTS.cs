@@ -68,6 +68,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             while (this.CurrentIterationsInFrame < this.MaxIterationsProcessedPerFrame && 
                 this.CurrentIterations < this.MaxIterations)
             {
+                //Debug.Log("Number");
                 selectedNode = Selection(this.InitialNode);
                 reward = Playout(selectedNode.State);
                 Backpropagate(selectedNode, reward);
@@ -81,15 +82,23 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             GOB.Action nextAction;
             MCTSNode currentNode = initialNode;
             MCTSNode bestChild = null;
+            MCTSNode childNode = null;
 
-            while (!CurrentStateWorldModel.IsTerminal())
+            //while (!CurrentStateWorldModel.IsTerminal())
+            while (!currentNode.State.IsTerminal())
             {
                 nextAction = this.CurrentStateWorldModel.GetNextAction();
+                //nextAction = currentNode.State.GetNextAction();
                 if (nextAction != null)
                 {
-                    return Expand(currentNode, nextAction);
+                    //currentNode.ChildNodes.Add(Expand(currentNode, nextAction));
+                    childNode = Expand(currentNode, nextAction);
+                    //Debug.Log("cenas: " + currentNode.ChildNodes.Count);
+                    return childNode;
                 }else
                 {
+                    //Debug.Log("Hello");
+                    //Debug.Log("Count: " + currentNode.ChildNodes.Count);
                     bestChild = BestUCTChild(currentNode);
                     currentNode = bestChild;
                 }
@@ -101,6 +110,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         private Reward Playout(WorldModel initialPlayoutState)
         {
             WorldModel currentState = initialPlayoutState;
+            //Debug.Log("Playout");
             while (!currentState.IsTerminal())
             {
                 GOB.Action[] actions = currentState.GetExecutableActions();
@@ -133,6 +143,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             WorldModel newState = CurrentStateWorldModel;
             MCTSNode newChild = new MCTSNode(newState);
             newChild.Action = action;
+            parent.ChildNodes.Add(newChild);
+            //Debug.Log("Hey!");
+            //Debug.Log(parent.ChildNodes.Count);
             return newChild;
         }
 
@@ -142,21 +155,29 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             List<MCTSNode> children = node.ChildNodes;
             double bestUCT = -1;
             int bestChildIndex = -1;
+            //Debug.Log(node.ChildNodes.Count);
             for(int i = 0; i < children.Count; i++)
             {
                 MCTSNode child = children[i];
-                float mui = child.Q/child.N; //Do as multiplication with power of -1?
+                child.N++;
+                node.N++;
+                float mui = child.Q/child.N; //Do as multiplication with power of -1?               
                 int ni = child.N;
                 int N = node.N;
                 double C = Math.Sqrt(2);
                 double UCT = mui + C * (Math.Sqrt(Math.Log(N)/ni));
-                if(UCT > bestUCT)
+                //Debug.Log("child Q: " + child.Q);
+                //Debug.Log("ni: " + ni);
+                //Debug.Log("N: " + N);
+                //Debug.Log(UCT);
+                //Debug.Log("Hey!");
+                if (UCT > bestUCT)
                 {
                     bestUCT = UCT;
                     bestChildIndex = i;
                 }
             }
-            
+            //Debug.Log(bestChildIndex);
             return children[bestChildIndex];
         }
 
