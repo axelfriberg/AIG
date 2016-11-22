@@ -101,6 +101,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                     //Debug.Log("Count: " + currentNode.ChildNodes.Count);
                     bestChild = BestUCTChild(currentNode);
                     currentNode = bestChild;
+                    return bestChild;
                 }
             }
 
