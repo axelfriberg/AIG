@@ -78,13 +78,13 @@ namespace Assets.Scripts
             this.Character = new DynamicCharacter(this.gameObject);
 
             var clusterGraph = Resources.Load<ClusterGraph>("ClusterGraph");
-       
-            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
 
+            //this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
+            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new EuclideanHeuristic()));
 
             //initialization of the GOB decision making
             //let's start by creating 4 main goals
-            
+
             this.SurviveGoal = new Goal(SURVIVE_GOAL, 2.0f);
 
             this.GainXPGoal = new Goal(GAIN_XP_GOAL, 1.0f)
@@ -252,6 +252,7 @@ namespace Assets.Scripts
                 if (action != null)
                 {
                     this.CurrentAction = action;
+                    this.MCTSDecisionMaking.BestActionSequence.Add(this.CurrentAction);
                 }
             }
 

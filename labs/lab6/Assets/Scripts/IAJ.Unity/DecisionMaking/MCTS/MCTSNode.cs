@@ -17,6 +17,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
         {
             this.State = state;
             this.ChildNodes = new List<MCTSNode>();
+            this.N = 1;
         }
     }
 }
