@@ -73,6 +73,8 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                 Backpropagate(selectedNode, reward);
                 this.CurrentIterationsInFrame++;
             }
+            var endTime = Time.realtimeSinceStartup;
+            TotalProcessingTime = startTime - endTime;
             return BestChild(InitialNode).Action;
         }
 
