@@ -253,30 +253,33 @@ namespace Assets.Scripts
                 if (action != null)
                 {
                     this.CurrentAction = action;
-                    Debug.Log(this.CurrentAction.Name);
                     this.MCTSDecisionMaking.BestActionSequence.Add(this.CurrentAction);
                 }
             }
 
             this.TotalProcessingTimeText.text = "Process. Time: " + this.MCTSDecisionMaking.TotalProcessingTime.ToString("F");
             
-            this.ProcessedActionsText.text = "Max Depth: " + this.MCTSDecisionMaking.MaxPlayoutDepthReached.ToString();
+            this.ProcessedActionsText.text = "Max S, P Depth: " + this.MCTSDecisionMaking.MaxSelectionDepthReached.ToString() + ", " + this.MCTSDecisionMaking.MaxPlayoutDepthReached.ToString();
 
-            //if (this.MCTSDecisionMaking.BestFirstChild != null)
-            //{
-            //    var q = this.MCTSDecisionMaking.BestFirstChild.Q / this.MCTSDecisionMaking.BestFirstChild.N;
-            //    this.BestDiscontentmentText.text = "Best Q value: " + q.ToString("F");
-            //    var actionText = "";
-            //    foreach (var action in this.MCTSDecisionMaking.BestActionSequence)
-            //    {
-            //        actionText += "\n" + action.Name;
-            //    }
-            //    this.BestActionText.text = "Best Action Sequence: " + actionText;
-            //}
-            //else
-            //{
-            //    this.BestActionText.text = "Best Action Sequence:\nNone";
-            //}
+            if (this.MCTSDecisionMaking.BestFirstChild != null)
+            {
+                var q = this.MCTSDecisionMaking.BestFirstChild.Q / this.MCTSDecisionMaking.BestFirstChild.N;
+                this.BestDiscontentmentText.text = "Best Q value: " + q.ToString("F");
+                var actionText = "";
+                for (int i = 0; i < 3; i++)
+                {
+                    var sequenceList = MCTSDecisionMaking.BestActionSequence;
+                    if (i < sequenceList.Count)
+                    {
+                        actionText += "\n" + MCTSDecisionMaking.BestActionSequence[i].Name;
+                    }
+                }
+                this.BestActionText.text = "Best Action Sequence: " + actionText;
+            }
+            else
+            {
+                this.BestActionText.text = "Best Action Sequence:\nNone";
+            }
         }
 
         private void UpdateDLGOAP()

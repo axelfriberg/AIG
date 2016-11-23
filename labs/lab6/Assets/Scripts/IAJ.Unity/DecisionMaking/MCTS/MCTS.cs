@@ -68,15 +68,21 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             while (this.CurrentIterationsInFrame < this.MaxIterationsProcessedPerFrame && 
                 this.CurrentIterations < this.MaxIterations)
             {
+                this.CurrentDepth = 0;
                 selectedNode = Selection(this.InitialNode);
+                if (this.CurrentDepth > this.MaxSelectionDepthReached)
+                    MaxSelectionDepthReached = CurrentDepth;
                 reward = Playout(selectedNode.State);
+                if (this.CurrentDepth > this.MaxPlayoutDepthReached)
+                    MaxPlayoutDepthReached = CurrentDepth;
                 Backpropagate(selectedNode, reward);
                 this.CurrentIterationsInFrame++;
             }
             var endTime = Time.realtimeSinceStartup;
             TotalProcessingTime = startTime - endTime;
-            this.BestFirstChild = BestChild(InitialNode);
-            return BestChild(InitialNode).Action;
+            MCTSNode child = BestChild(InitialNode);
+            this.BestFirstChild = child;
+            return child.Action;
         }
 
         private MCTSNode Selection(MCTSNode initialNode)
@@ -93,10 +99,12 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                     return Expand(currentNode, nextAction);
                 }else
                 {
+                    this.CurrentDepth++;
                     bestChild = BestUCTChild(currentNode);
                     currentNode = bestChild;
                     return bestChild;
                 }
+
             }
 
             return bestChild;
@@ -114,6 +122,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                 GOB.Action action = actions[index];
                 currentState = currentState.GenerateChildWorldModel();
                 action.ApplyActionEffects(currentState);
+                this.CurrentDepth++;
             }
             Reward reward = new Reward();
             reward.Value = currentState.GetScore();
