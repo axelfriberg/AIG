@@ -75,6 +75,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             }
             var endTime = Time.realtimeSinceStartup;
             TotalProcessingTime = startTime - endTime;
+            this.BestFirstChild = BestChild(InitialNode);
             return BestChild(InitialNode).Action;
         }
 
@@ -84,9 +85,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             MCTSNode currentNode = initialNode;
             MCTSNode bestChild = null;
 
-            while (!CurrentStateWorldModel.IsTerminal())
+            while (!currentNode.State.IsTerminal())
             {
-                nextAction = this.CurrentStateWorldModel.GetNextAction();
+                nextAction = currentNode.State.GetNextAction();
                 if (nextAction != null)
                 {
                     return Expand(currentNode, nextAction);
@@ -132,10 +133,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
 
         private MCTSNode Expand(MCTSNode parent, GOB.Action action)
         {
-            action.ApplyActionEffects(CurrentStateWorldModel);
-            WorldModel newState = CurrentStateWorldModel;
-            MCTSNode newChild = new MCTSNode(newState);
-            newChild.Action = action;
+            WorldModel currentState = parent.State.GenerateChildWorldModel();
+            action.ApplyActionEffects(currentState);
+            MCTSNode newChild = new MCTSNode(currentState)
+            {
+                Parent = parent,
+                Action = action
+            };
             parent.ChildNodes.Add(newChild);
 
             return newChild;

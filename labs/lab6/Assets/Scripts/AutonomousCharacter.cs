@@ -59,6 +59,7 @@ namespace Assets.Scripts
         private float previousGold = 0.0f;
         private int previousXP = 0;
         private Vector3 previousTarget;
+        private string previousActionName;
 
 
         public void Initialize(NavMeshPathGraph navMeshGraph, AStarPathfinding pathfindingAlgorithm)
@@ -252,6 +253,7 @@ namespace Assets.Scripts
                 if (action != null)
                 {
                     this.CurrentAction = action;
+                    Debug.Log(this.CurrentAction.Name);
                     this.MCTSDecisionMaking.BestActionSequence.Add(this.CurrentAction);
                 }
             }
@@ -260,21 +262,21 @@ namespace Assets.Scripts
             
             this.ProcessedActionsText.text = "Max Depth: " + this.MCTSDecisionMaking.MaxPlayoutDepthReached.ToString();
 
-            if (this.MCTSDecisionMaking.BestFirstChild != null)
-            {
-                var q = this.MCTSDecisionMaking.BestFirstChild.Q / this.MCTSDecisionMaking.BestFirstChild.N;
-                this.BestDiscontentmentText.text = "Best Q value: " + q.ToString("F");
-                var actionText = "";
-                foreach (var action in this.MCTSDecisionMaking.BestActionSequence)
-                {
-                    actionText += "\n" + action.Name;
-                }
-                this.BestActionText.text = "Best Action Sequence: " + actionText;
-            }
-            else
-            {
-                this.BestActionText.text = "Best Action Sequence:\nNone";
-            }
+            //if (this.MCTSDecisionMaking.BestFirstChild != null)
+            //{
+            //    var q = this.MCTSDecisionMaking.BestFirstChild.Q / this.MCTSDecisionMaking.BestFirstChild.N;
+            //    this.BestDiscontentmentText.text = "Best Q value: " + q.ToString("F");
+            //    var actionText = "";
+            //    foreach (var action in this.MCTSDecisionMaking.BestActionSequence)
+            //    {
+            //        actionText += "\n" + action.Name;
+            //    }
+            //    this.BestActionText.text = "Best Action Sequence: " + actionText;
+            //}
+            //else
+            //{
+            //    this.BestActionText.text = "Best Action Sequence:\nNone";
+            //}
         }
 
         private void UpdateDLGOAP()
@@ -298,9 +300,16 @@ namespace Assets.Scripts
                 var actionText = "";
                 foreach (var action in this.GOAPDecisionMaking.BestActionSequence)
                 {
-                    actionText += "\n" + action.Name;
+                    Debug.Log("action: " + action.Name);
+                    Debug.Log("previous: " + this.previousActionName);
+                    if (action.Name != this.previousActionName)
+                    {
+                        actionText += "\n" + action.Name;
+                    }
+                    previousActionName = action.Name;                   
                 }
                 this.BestActionText.text = "Best Action Sequence: " + actionText;
+            
             }
             else
             {
