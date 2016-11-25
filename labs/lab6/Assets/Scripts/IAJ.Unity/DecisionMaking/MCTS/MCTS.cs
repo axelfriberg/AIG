@@ -77,6 +77,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                     MaxPlayoutDepthReached = CurrentDepth;
                 Backpropagate(selectedNode, reward);
                 this.CurrentIterationsInFrame++;
+                this.CurrentIterations++;
             }
             var endTime = Time.realtimeSinceStartup;
             TotalProcessingTime = startTime - endTime;
