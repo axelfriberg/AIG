@@ -13,26 +13,32 @@ namespace Assets.Scripts.DecisionMakingActions
 
         public override bool CanExecute()
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            if (!base.CanExecute())
+                return false;
+            else
+                return true;
         }
 
         public override bool CanExecute(WorldModel worldModel)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            if (!base.CanExecute(worldModel))
+                return false;
+            else
+                return true;
         }
 
         public override void Execute()
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            base.Execute();
+            this.Character.GameManager.GetHealthPotion(this.Target);
         }
 
         public override void ApplyActionEffects(WorldModel worldModel)
         {
-            //TODO: implement
-            throw new NotImplementedException();
+            base.ApplyActionEffects(worldModel);
+            worldModel.SetProperty(Properties.MANA, this.Character.GameManager.characterData.MaxHP);
+            //disables the target object so that it can't be reused again
+            worldModel.SetProperty(this.Target.name, false);
         }
     }
 }
