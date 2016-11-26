@@ -32,6 +32,24 @@ namespace Assets.Scripts.IAJ.Unity.Pathfinding.DataStructures.HPStructures
              return null; 
         }
 
+        public Cluster Quantize(Vector3 node) {
+
+            //foreach (Cluster c in clusters) {
+            //    if (node.x <= c.max.x && node.x >= c.min.x) {
+            //        if (node.z <= c.max.z && node.z >= c.min.z) {
+            //            return c;
+            //        }
+            //    }
+            //}
+            //return null;
+            foreach (Cluster c in clusters) {
+                if (MathHelper.PointInsideBoundingBox(node, c.min, c.max)) {
+                    return c;
+                }
+            }
+            return null;
+        }
+
         public void SaveToAssetDatabase()
         {
             string path = AssetDatabase.GetAssetPath(Selection.activeObject);

@@ -152,7 +152,7 @@ namespace Assets.Scripts
 
             var worldModel = new CurrentStateWorldModel(this.GameManager, this.Actions, this.Goals);
             this.GOAPDecisionMaking = new DepthLimitedGOAPDecisionMaking(worldModel,this.Actions,this.Goals);
-            this.MCTSDecisionMaking = new MCTS(worldModel);
+            this.MCTSDecisionMaking = new MCTSBiasedPlayout(worldModel);
             this.MCTSDecisionMaking.MaxIterations = 5000;
             this.MCTSDecisionMaking.MaxIterationsProcessedPerFrame = 25;
         }
@@ -261,22 +261,21 @@ namespace Assets.Scripts
             }
 
             this.TotalProcessingTimeText.text = "Process. Time: " + this.MCTSDecisionMaking.TotalProcessingTime.ToString("F");
-            
-            this.ProcessedActionsText.text = "Max Depth: " + this.MCTSDecisionMaking.MaxPlayoutDepthReached.ToString();
 
-            if (this.MCTSDecisionMaking.BestFirstChild != null)
-            {
+            this.ProcessedActionsText.text = "Max S, P Depth: " + this.MCTSDecisionMaking.MaxSelectionDepthReached.ToString() + ", " + this.MCTSDecisionMaking.MaxPlayoutDepthReached.ToString();
+
+            if (this.MCTSDecisionMaking.BestFirstChild != null) {
                 var q = this.MCTSDecisionMaking.BestFirstChild.Q / this.MCTSDecisionMaking.BestFirstChild.N;
-                this.BestDiscontentmentText.text = "Best Exp. Q value: " + q.ToString("F");
+                this.BestDiscontentmentText.text = "Best Q value: " + q.ToString("F");
                 var actionText = "";
-                foreach (var action in this.MCTSDecisionMaking.BestActionSequence)
-                {
-                    actionText += "\n" + action.Name;
+                for (int i = 0; i < 3; i++) {
+                    var sequenceList = MCTSDecisionMaking.BestActionSequence;
+                    if (i < sequenceList.Count) {
+                        actionText += "\n" + MCTSDecisionMaking.BestActionSequence[i].Name;
+                    }
                 }
                 this.BestActionText.text = "Best Action Sequence: " + actionText;
-            }
-            else
-            {
+            } else {
                 this.BestActionText.text = "Best Action Sequence:\nNone";
             }
         }

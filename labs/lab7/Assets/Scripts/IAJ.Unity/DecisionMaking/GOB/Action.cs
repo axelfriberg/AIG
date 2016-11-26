@@ -56,5 +56,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
         {
         }
 
+        public virtual int getHvalue(WorldModel state) {
+            return int.MaxValue;
+        }
+
     }
 }

@@ -8,9 +8,11 @@ namespace Assets.Scripts.DecisionMakingActions
     {
         private int hpChange;
         private int xpChange;
+        private GameObject target;
 
         public SwordAttack(AutonomousCharacter character, GameObject target) : base("SwordAttack",character,target)
         {
+            this.target = target;
            
             if (target.tag.Equals("Skeleton"))
             {
@@ -70,6 +72,18 @@ namespace Assets.Scripts.DecisionMakingActions
 
             //disables the target object so that it can't be reused again
             worldModel.SetProperty(this.Target.name,false);
+        }
+
+        public override int getHvalue(WorldModel state) {
+            if (target.tag.Equals("Skeleton")) {
+                return 2;
+            } else if (target.tag.Equals("Orc")) {
+                return 5;
+            } else if (target.tag.Equals("Dragon")) {
+                return 6;
+            } else {
+                return 100;
+            }
         }
     }
 }

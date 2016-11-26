@@ -20,17 +20,17 @@ namespace Assets.Scripts.DecisionMakingActions
         public override float GetDuration()
         {
             return this.GetDuration(this.Character.Character.KinematicData.position);
-            return (this.Target.transform.position - this.Character.Character.KinematicData.position).magnitude / this.Character.Character.MaxSpeed;
         }
 
         public override float GetDuration(WorldModel worldModel)
         {
             var position = (Vector3)worldModel.GetProperty(Properties.POSITION);
             return this.GetDuration(position);
-            return (this.Target.transform.position - position).magnitude / this.Character.Character.MaxSpeed;
         }
 
         private float GetDuration(Vector3 currentPosition) {
+            //var characterPos = this.Character.AStarPathFinding.NavMeshGraph.QuantizeToNode(currentPosition, 0);
+            //var targetPos = this.Character.AStarPathFinding.NavMeshGraph.QuantizeToNode(this.Target.transform.position, 0);
             var distance = this.Character.AStarPathFinding.Heuristic.H(currentPosition, this.Target.transform.position);
             return distance / this.Character.Character.MaxSpeed;
         }
@@ -74,6 +74,7 @@ namespace Assets.Scripts.DecisionMakingActions
 
             worldModel.SetProperty(Properties.POSITION, Target.transform.position);
         }
+
 
     }
 }
