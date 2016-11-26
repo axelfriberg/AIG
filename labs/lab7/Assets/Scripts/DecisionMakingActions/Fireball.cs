@@ -16,7 +16,7 @@ namespace Assets.Scripts.DecisionMakingActions
             } else if (target.tag.Equals("Orc")) {
                 this.xpChange = 10;
             } else if (target.tag.Equals("Dragon")) {
-                this.xpChange = 15;
+                this.xpChange = 0;
             }
         }
 
@@ -65,7 +65,8 @@ namespace Assets.Scripts.DecisionMakingActions
             worldModel.SetProperty(Properties.XP, xp + this.xpChange);
 
             //disables the target object so that it can't be reused again
-            worldModel.SetProperty(this.Target.name, false);
+            if (!this.Target.tag.Equals("Dragon"))
+                worldModel.SetProperty(this.Target.name, false);
         }
     }
 }
