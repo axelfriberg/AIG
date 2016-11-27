@@ -19,17 +19,13 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS {
             float UCTValue;
             float bestUCT = float.MinValue;
             int k = node.N;
+
             //step 1, calculate beta and 1-beta. beta does not change from child to child. So calculate this only once
-            //double beta = Math.Sqrt(k / (3 * node.N + k + 1));
-
-
             //step 2, calculate the MCTS value, the RAVE value, and the UCT for each child and determine the best one
 
             List<MCTSNode> children = node.ChildNodes;
             int bestChildIndex = -1;
-            //double beta = children[children.Count-1].NRAVE / children[children.Count - 1].N + children[children.Count - 1].NRAVE + 4 * children[children.Count - 1].N * Math.Pow(Math.Pow(children[children.Count - 1].NRAVE, b), 2);
-            //double beta = node.NRAVE / (node.N + node.NRAVE + 4 * node.N * Math.Pow(Math.Pow(node.NRAVE, b), 2));
-            double beta = Math.Sqrt(k / (3 * children[children.Count - 1].NRAVE + k));
+            double beta = node.NRAVE / (node.N + node.NRAVE + 4 * node.N * Math.Pow(Math.Pow(node.NRAVE, b), 2));
             double betaminus = 1 - beta;
             for (int i = 0; i < children.Count; i++) {
                 MCTSNode child = children[i];

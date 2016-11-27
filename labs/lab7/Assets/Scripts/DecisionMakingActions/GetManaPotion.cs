@@ -39,7 +39,7 @@ namespace Assets.Scripts.DecisionMakingActions
             worldModel.SetProperty(this.Target.name, false);
         }
 
-        public override int getHvalue(WorldModel state) {
+        public override int getHvalue() {
             int maxMana = 10;
             int currentMana = this.Character.GameManager.characterData.Mana;
             if (currentMana > 0.8 * maxMana) {

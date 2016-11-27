@@ -71,7 +71,7 @@ namespace Assets.Scripts.DecisionMakingActions
                 worldModel.SetProperty(this.Target.name, false);
         }
 
-        public override int getHvalue(WorldModel state) {
+        public override int getHvalue() {
             if (target.tag.Equals("Skeleton")) {
                 return 5;
             } else if (target.tag.Equals("Orc")) {

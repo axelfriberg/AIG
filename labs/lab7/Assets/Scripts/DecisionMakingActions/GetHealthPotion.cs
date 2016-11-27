@@ -43,7 +43,7 @@ namespace Assets.Scripts.DecisionMakingActions
             worldModel.SetProperty(this.Target.name, false);
         }
 
-        public override int getHvalue(WorldModel state) {
+        public override int getHvalue() {
             int maxHP = this.Character.GameManager.characterData.MaxHP;
             int currentHP = this.Character.GameManager.characterData.HP;
             if (currentHP > 0.8 * maxHP) {

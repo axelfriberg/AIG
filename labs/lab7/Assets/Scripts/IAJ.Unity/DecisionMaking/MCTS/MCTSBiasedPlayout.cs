@@ -17,7 +17,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
             while (!currentState.IsTerminal()) {
                 for (int i = 0; i < actions.Length; i++) {
                     GOB.Action action = actions[i];
-                    int h = action.getHvalue(currentState);
+                    int h = action.getHvalue();
                     if (h < bestHvalue) {
                         bestActionIndex = i;
                         bestHvalue = h;

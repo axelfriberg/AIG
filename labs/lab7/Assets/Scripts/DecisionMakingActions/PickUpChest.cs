@@ -51,7 +51,7 @@ namespace Assets.Scripts.DecisionMakingActions
             worldModel.SetProperty(this.Target.name, false);
         }
 
-        public override int getHvalue(WorldModel state) {
+        public override int getHvalue() {
             return 4;
         }
 

@@ -23,7 +23,7 @@ namespace Assets.Scripts
         public const string BE_QUICK_GOAL = "BeQuick";
         public const string GET_RICH_GOAL = "GetRich";
 
-        public const float DECISION_MAKING_INTERVAL = 10.0f;
+        public const float DECISION_MAKING_INTERVAL = 30.0f;
         //public fields to be set in Unity Editor
         public GameManager.GameManager GameManager;
         public Text SurviveGoalText;
@@ -81,8 +81,8 @@ namespace Assets.Scripts
 
             var clusterGraph = Resources.Load<ClusterGraph>("ClusterGraph");
        
-            //this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
-            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new EuclideanHeuristic()));
+            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
+            //this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new EuclideanHeuristic()));
 
 
             //initialization of the GOB decision making
@@ -242,8 +242,8 @@ namespace Assets.Scripts
                     this.currentSmoothedSolution.CalculateLocalPathsFromPathPositions(this.Character.KinematicData.position);
                     this.Character.Movement = new DynamicFollowPath(this.Character.KinematicData, this.currentSmoothedSolution)
                     {
-                        MaxAcceleration = 500.0f,
-                        MaxSpeed = 500.0f
+                        MaxAcceleration = 40.0f,
+                        MaxSpeed = 40.0f
                     };
                 }
             }
@@ -275,7 +275,7 @@ namespace Assets.Scripts
                 for (int i = 0; i < 3; i++) {
                     var sequenceList = MCTSDecisionMaking.BestActionSequence;
                     if (i < sequenceList.Count) {
-                        actionText += "\n" + MCTSDecisionMaking.BestActionSequence[i].Name + MCTSDecisionMaking.BestActionSequence[i].getHvalue();
+                        actionText += "\n" + MCTSDecisionMaking.BestActionSequence[i].Name;
                     }
                 }
                 this.BestActionText.text = "Best Action Sequence: " + actionText;
