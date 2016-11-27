@@ -66,7 +66,7 @@ namespace Assets.Scripts
         public void Initialize(NavMeshPathGraph navMeshGraph, AStarPathfinding pathfindingAlgorithm)
         {
             this.MCTSActive = true; //change this if you want to try DL-GOAP
-            this.draw = false;
+            this.draw = true;
             this.navMesh = navMeshGraph;
             this.AStarPathFinding = pathfindingAlgorithm;
             this.AStarPathFinding.NodesPerSearch = 100;
@@ -81,12 +81,13 @@ namespace Assets.Scripts
 
             var clusterGraph = Resources.Load<ClusterGraph>("ClusterGraph");
        
-            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
+            //this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new GatewayHeuristic(clusterGraph)));
+            this.Initialize(NavigationManager.Instance.NavMeshGraphs[0], new NodeArrayAStarPathFinding(NavigationManager.Instance.NavMeshGraphs[0], new EuclideanHeuristic()));
 
 
             //initialization of the GOB decision making
             //let's start by creating 4 main goals
-            
+
             this.SurviveGoal = new Goal(SURVIVE_GOAL, 2.0f);
 
             this.GainXPGoal = new Goal(GAIN_XP_GOAL, 1.0f)
@@ -119,6 +120,7 @@ namespace Assets.Scripts
 
             foreach (var chest in GameObject.FindGameObjectsWithTag("Chest"))
             {
+              
                 this.Actions.Add(new PickUpChest(this, chest));
             }
 
@@ -152,8 +154,8 @@ namespace Assets.Scripts
 
             var worldModel = new CurrentStateWorldModel(this.GameManager, this.Actions, this.Goals);
             this.GOAPDecisionMaking = new DepthLimitedGOAPDecisionMaking(worldModel,this.Actions,this.Goals);
-            this.MCTSDecisionMaking = new MCTSBiasedPlayout(worldModel);
-            this.MCTSDecisionMaking.MaxIterations = 5000;
+            this.MCTSDecisionMaking = new MCTSRAVE(worldModel);
+            this.MCTSDecisionMaking.MaxIterations = 1000;
             this.MCTSDecisionMaking.MaxIterationsProcessedPerFrame = 25;
         }
 
@@ -223,6 +225,7 @@ namespace Assets.Scripts
             {
                 if(this.CurrentAction.CanExecute())
                 {
+                    
                     this.CurrentAction.Execute();
                 }
             }
@@ -239,8 +242,8 @@ namespace Assets.Scripts
                     this.currentSmoothedSolution.CalculateLocalPathsFromPathPositions(this.Character.KinematicData.position);
                     this.Character.Movement = new DynamicFollowPath(this.Character.KinematicData, this.currentSmoothedSolution)
                     {
-                        MaxAcceleration = 200.0f,
-                        MaxSpeed = 40.0f
+                        MaxAcceleration = 500.0f,
+                        MaxSpeed = 500.0f
                     };
                 }
             }
@@ -257,6 +260,7 @@ namespace Assets.Scripts
                 if (action != null)
                 {
                     this.CurrentAction = action;
+                    this.MCTSDecisionMaking.BestActionSequence.Add(this.CurrentAction);
                 }
             }
 
@@ -271,7 +275,7 @@ namespace Assets.Scripts
                 for (int i = 0; i < 3; i++) {
                     var sequenceList = MCTSDecisionMaking.BestActionSequence;
                     if (i < sequenceList.Count) {
-                        actionText += "\n" + MCTSDecisionMaking.BestActionSequence[i].Name;
+                        actionText += "\n" + MCTSDecisionMaking.BestActionSequence[i].Name + MCTSDecisionMaking.BestActionSequence[i].getHvalue();
                     }
                 }
                 this.BestActionText.text = "Best Action Sequence: " + actionText;
@@ -319,6 +323,49 @@ namespace Assets.Scripts
             {
                 this.AStarPathFinding.InitializePathfindingSearch(this.Character.KinematicData.position, targetPosition);
                 this.previousTarget = targetPosition;
+            }
+        }
+        public void OnDrawGizmos() {
+            if (this.draw) {
+                //draw the current Solution Path if any (for debug purposes)
+                if (this.currentSolution != null) {
+                    var previousPosition = this.startPosition;
+                    foreach (var pathPosition in this.currentSolution.PathPositions) {
+                        Debug.DrawLine(previousPosition, pathPosition, Color.red);
+                        previousPosition = pathPosition;
+                    }
+
+                    previousPosition = this.startPosition;
+                    foreach (var pathPosition in this.currentSmoothedSolution.PathPositions) {
+                        Debug.DrawLine(previousPosition, pathPosition, Color.green);
+                        previousPosition = pathPosition;
+                    }
+                }
+
+                ////draw the nodes in Open and Closed Sets
+                //if (this.AStarPathFinding != null) {
+                //    Gizmos.color = Color.cyan;
+
+                //    if (this.AStarPathFinding.Open != null) {
+                //        foreach (var nodeRecord in this.AStarPathFinding.Open.All()) {
+                //            Gizmos.DrawSphere(nodeRecord.node.LocalPosition, 1.0f);
+                //        }
+                //    }
+
+                //    Gizmos.color = Color.blue;
+
+                //    if (this.AStarPathFinding.Closed != null) {
+                //        foreach (var nodeRecord in this.AStarPathFinding.Closed.All()) {
+                //            Gizmos.DrawSphere(nodeRecord.node.LocalPosition, 1.0f);
+                //        }
+                //    }
+                //}
+
+                //Gizmos.color = Color.yellow;
+                ////draw the target for the follow path movement
+                //if (this.character.Movement != null) {
+                //    Gizmos.DrawSphere(this.character.Movement.Target.position, 1.0f);
+                //}
             }
         }
     }
