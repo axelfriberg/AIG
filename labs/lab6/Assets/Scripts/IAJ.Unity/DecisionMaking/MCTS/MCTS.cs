@@ -80,7 +80,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS
                 this.CurrentIterations++;
             }
             var endTime = Time.realtimeSinceStartup;
-            TotalProcessingTime = startTime - endTime;
+            TotalProcessingTime += endTime- startTime;
             MCTSNode child = BestChild(InitialNode);
             this.BestFirstChild = child;
             return child.Action;

@@ -23,7 +23,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS {
 
         private CurrentStateWorldModel CurrentStateWorldModel { get; set; }
         private MCTSNode InitialNode { get; set; }
-        private System.Random RandomGenerator { get; set; }
+        protected System.Random RandomGenerator { get; set; }
 
 
 
@@ -74,7 +74,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.MCTS {
                 this.CurrentIterations++;
             }
             var endTime = Time.realtimeSinceStartup;
-            TotalProcessingTime = startTime - endTime;
+            this.TotalProcessingTime += endTime - startTime;
             MCTSNode child = BestChild(InitialNode);
             this.BestFirstChild = child;
             return child.Action;

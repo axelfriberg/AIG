@@ -18,7 +18,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
         public Action[] BestActionSequence { get; private set; }
         public Action BestAction { get; private set; }
         public float BestDiscontentmentValue { get; private set; }
-        private int CurrentDepth {  get; set; }
+        private int CurrentDepth { get; set; }
 
         public DepthLimitedGOAPDecisionMaking(CurrentStateWorldModel currentStateWorldModel, List<Action> actions, List<Goal> goals)
         {
@@ -44,34 +44,32 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
 
         public Action ChooseAction()
         {
-            var processedActions = 0;
 
             var startTime = Time.realtimeSinceStartup;
 
-            //TODO: Implement
             float currentValue;
             int currentActionCombinations = 0;
 
-            while(this.CurrentDepth >= 0)
+            while (this.CurrentDepth >= 0)
             {
-                if(currentActionCombinations > ActionCombinationsProcessedPerFrame)
-                {                    
+                if (currentActionCombinations > ActionCombinationsProcessedPerFrame)
+                {
                     this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
                     return null;
                 }
 
-                if(CurrentDepth >= MAX_DEPTH)
+                if (CurrentDepth >= MAX_DEPTH)
                 {
                     currentValue = Models[CurrentDepth].CalculateDiscontentment(this.Goals);
-                    if(currentValue < this.BestDiscontentmentValue)
+                    if (currentValue < this.BestDiscontentmentValue)
                     {
                         this.BestDiscontentmentValue = currentValue;
                         this.BestAction = this.ActionPerLevel[0];
-                        for(int i = 0; i < this.ActionPerLevel.Length; i++)
+                        for (int i = 0; i < this.ActionPerLevel.Length; i++)
                         {
                             this.BestActionSequence[i] = this.ActionPerLevel[i];
                         }
-                        
+
                     }
                     CurrentDepth -= 1;
                     currentActionCombinations += 1;
@@ -79,22 +77,24 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
                 }
 
                 Action nextAction = Models[CurrentDepth].GetNextAction();
-                if(nextAction != null)
+                if (nextAction != null)
                 {
                     Models[CurrentDepth + 1] = Models[CurrentDepth].GenerateChildWorldModel();
                     nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
                     ActionPerLevel[CurrentDepth] = nextAction;
                     CurrentDepth += 1;
+
                 }
                 else
                 {
-                    CurrentDepth -= 1;  
+                    CurrentDepth -= 1;
                 }
             }
-           
+
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
             this.InProgress = false;
+            //this.TotalActionCombinationsProcessed += currentActionCombinations;
             return this.BestAction;
-        }               
+        }
     }
 }

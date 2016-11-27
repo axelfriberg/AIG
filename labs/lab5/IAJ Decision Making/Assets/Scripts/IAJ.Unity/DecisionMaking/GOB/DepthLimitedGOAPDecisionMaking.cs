@@ -44,11 +44,9 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
 
         public Action ChooseAction()
         {
-            var processedActions = 0;
 
             var startTime = Time.realtimeSinceStartup;
 
-            //TODO: Implement
             float currentValue;
             int currentActionCombinations = 0;
 
@@ -85,6 +83,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
                     nextAction.ApplyActionEffects(Models[CurrentDepth + 1]);
                     ActionPerLevel[CurrentDepth] = nextAction;
                     CurrentDepth += 1;
+                    
                 }
                 else
                 {
@@ -94,6 +93,7 @@ namespace Assets.Scripts.IAJ.Unity.DecisionMaking.GOB
            
             this.TotalProcessingTime += Time.realtimeSinceStartup - startTime;
             this.InProgress = false;
+            this.TotalActionCombinationsProcessed += currentActionCombinations;
             return this.BestAction;
         }               
     }
